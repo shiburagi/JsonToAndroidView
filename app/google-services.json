@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "211259849816",
+    "firebase_url": "https://jsonview-d3fef.firebaseio.com",
+    "project_id": "jsonview-d3fef",
+    "storage_bucket": "jsonview-d3fef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211259849816:android:75cc0e23ab6a9551",
+        "android_client_info": {
+          "package_name": "com.app.infideap.jsonview"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "211259849816-0mp3m20u0hc1h87r6u5b979031d7ma7h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAE1bKXAQxauNB4DBmbe2VmLLEaieaPq5s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

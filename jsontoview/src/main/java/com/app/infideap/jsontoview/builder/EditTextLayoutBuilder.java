@@ -1,8 +1,10 @@
-package com.app.infideap.jsontoview;
+package com.app.infideap.jsontoview.builder;
 
+import android.view.Gravity;
 import android.view.View;
-import android.widget.EditText;
 
+import com.app.infideap.jsontoview.JsonView;
+import com.app.infideap.stylishwidget.view.AEditText;
 import com.google.gson.JsonObject;
 
 /**
@@ -16,8 +18,9 @@ public class EditTextLayoutBuilder extends LayoutBuilder {
     }
 
     public View create(JsonObject object) {
-        EditText editText = new EditText(context);
+        AEditText editText = new AEditText(context);
 //        editText.setText("test");
+        editText.setGravity(getGravity(object, Gravity.START));
 
         setup(editText, object);
         return editText;

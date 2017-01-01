@@ -5,11 +5,13 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 public class JsonActivity extends AppCompatActivity {
 
     private static final String TAG = JsonActivity.class.getSimpleName();
+    public static final String PAGE = "PAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +20,7 @@ public class JsonActivity extends AppCompatActivity {
         FrameLayout frameLayout = new FrameLayout(this);
         setContentView(frameLayout);
 
-        String url = getIntent().getStringExtra(Constant.JSON_URL);
+        String url = getIntent().getStringExtra(PAGE);
 
 
         if (url == null){
@@ -35,8 +37,19 @@ public class JsonActivity extends AppCompatActivity {
         }
 
         if (url!=null){
-            JsonView.parse(frameLayout, url);
+            JsonView.parse(this, frameLayout, url);
         }
 
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

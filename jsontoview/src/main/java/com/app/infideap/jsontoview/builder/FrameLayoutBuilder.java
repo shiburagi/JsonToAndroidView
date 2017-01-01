@@ -1,8 +1,9 @@
-package com.app.infideap.jsontoview;
+package com.app.infideap.jsontoview.builder;
 
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.app.infideap.jsontoview.JsonView;
 import com.google.gson.JsonObject;
 
 /**
