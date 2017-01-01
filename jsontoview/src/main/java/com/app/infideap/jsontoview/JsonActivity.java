@@ -40,6 +40,7 @@ public class JsonActivity extends AppCompatActivity {
             JsonView.parse(this, frameLayout, url);
         }
 
+
     }
 
 

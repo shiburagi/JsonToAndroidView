@@ -1,8 +1,8 @@
 package com.app.infideap.jsontoview.builder;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -14,6 +14,7 @@ import com.app.infideap.jsontoview.DimensionConverter;
 import com.app.infideap.jsontoview.JsonActivity;
 import com.app.infideap.jsontoview.JsonView;
 import com.app.infideap.jsontoview.ViewProperties;
+import com.app.infideap.jsontoview.util.IdManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -27,7 +28,7 @@ public class LayoutBuilder {
 
     private static final String TAG = LayoutBuilder.class.getSimpleName();
     private final JsonView.ViewGroupParser parser;
-    protected final Context context;
+    protected final JsonActivity context;
 
     public LayoutBuilder(JsonView.ViewGroupParser parser) {
         this.parser = parser;
@@ -58,7 +59,11 @@ public class LayoutBuilder {
         }
         element = object.get(ViewProperties.TEXT);
         if (isNotNull(element)) {
-            view.setText(element.getAsString());
+            String text = element.getAsString();
+            if (text.charAt(0) == '@')
+                view.setText(((AppCompatActivity) context).getIntent().getStringExtra(text));
+            else
+                view.setText(text);
         }
 
         element = object.get(ViewProperties.TEXT_SIZE);
@@ -84,6 +89,12 @@ public class LayoutBuilder {
                     context.getResources().getDisplayMetrics());
             Log.e(TAG, "Padding : " + padding);
             view.setPadding(padding, padding, padding, padding);
+        }
+
+        element = object.get(ViewProperties.ID);
+        if (isNotNull(element)) {
+            IdManager.getInstance().create(view, element.getAsString());
+            Log.e(TAG, "ID : " + element.getAsString() + ", " + view.getId());
         }
 
 
@@ -115,19 +126,53 @@ public class LayoutBuilder {
 
         element = object.get(ViewProperties.ON_CLICK);
         if (isNotNull(element)) {
-            final String page = element.getAsString();
-            Log.e(TAG, page);
+
+            final JsonElement finalElement = element;
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(context, JsonActivity.class);
-                    intent.putExtra(JsonActivity.PAGE, page);
+                    final Intent intent = new Intent(context, JsonActivity.class);
+                    if (finalElement.isJsonObject()) {
+                        extract(intent, finalElement.getAsJsonObject());
+                    } else {
+                        intent.putExtra(JsonActivity.PAGE, finalElement.getAsString());
+                    }
                     context.startActivity(intent);
                 }
             });
         }
 
 
+    }
+
+    private void extract(Intent intent, JsonObject object) {
+        Log.e(TAG, "extract()");
+        JsonElement element = object.get(ViewAction.ACTION);
+        if (isNotNull(element)) {
+            intent.putExtra(JsonActivity.PAGE, element.getAsString());
+        }
+        element = object.get(ViewAction.PARAMS);
+        if (isNotNull(element)) {
+            if (element.isJsonArray()) {
+                JsonArray array = element.getAsJsonArray();
+                for (int i = 0; i < array.size(); i++) {
+                    JsonElement jsonElement = array.get(i);
+                    if (jsonElement.isJsonPrimitive()) {
+                        String id = jsonElement.getAsString();
+                        int idInt = IdManager.getInstance().getId(id);
+                        Log.e(TAG, "Params Id : " + id+", "+idInt);
+                        View view = context.findViewById(idInt);
+                        Log.e(TAG, "View : " + String.valueOf(view));
+                        if (view != null)
+                            if (view instanceof TextView) {
+                                String text = ((TextView) view).getText().toString();
+                                Log.e(TAG, "Params : " + text);
+                                intent.putExtra(id, text);
+                            }
+                    }
+                }
+            }
+        }
     }
 
     public int getGravity(JsonObject object, int _default) {

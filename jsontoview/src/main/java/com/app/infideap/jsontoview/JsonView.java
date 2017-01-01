@@ -1,6 +1,5 @@
 package com.app.infideap.jsontoview;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -42,7 +41,7 @@ public class JsonView {
                                 JsonElement.class
                         );
                         parent.removeAllViews();
-                        new ViewGroupParser(parent.getContext())
+                        new ViewGroupParser(jsonActivity)
                                 .parse(
                                         jsonActivity,
                                         parent,
@@ -58,7 +57,7 @@ public class JsonView {
                 });
     }
 
-    private static void parseUrl(final FrameLayout parent, String url) {
+    private static void parseUrl(final JsonActivity activity, final FrameLayout parent, String url) {
         Atom.with(parent.getContext()).load(url)
                 .asJsonElement()
                 .setCallback(new FutureCallback<JsonElement>() {
@@ -68,7 +67,7 @@ public class JsonView {
                             e.printStackTrace();
                         } else {
                             Log.e(TAG, new Gson().toJson(result));
-                            new ViewGroupParser(parent.getContext()).parse(parent, result);
+                            new ViewGroupParser(activity).parse(parent, result);
                         }
                     }
                 });
@@ -81,9 +80,9 @@ public class JsonView {
         private final TextViewLayoutBuilder textViewLayoutBuilder;
         private final EditTextLayoutBuilder editTextLayoutBuilder;
         private final ButtonLayoutBuilder butonLayoutBuilder;
-        private final Context context;
+        private final JsonActivity context;
 
-        public ViewGroupParser(Context context) {
+        public ViewGroupParser(JsonActivity context) {
             this.context = context;
             linearLayoutBuilder = new LinearLayoutBuilder(this);
             frameLayoutBuilder = new FrameLayoutBuilder(this);
@@ -104,7 +103,9 @@ public class JsonView {
                                 .setDisplayHomeAsUpEnabled(jsonElement.getAsBoolean());
                     }
                 parse(parent, object);
+                Log.e(TAG, "Activity View : "+jsonActivity.findViewById(1));
             }
+
         }
 
         public void parse(ViewGroup parent, JsonElement result) {
@@ -117,7 +118,11 @@ public class JsonView {
         }
 
         private ViewGroup parse(ViewGroup parent, JsonObject object) {
-            String type = object.get(ViewProperties.TYPE).getAsString();
+            JsonElement element = object.get(ViewProperties.TYPE);
+            if (element == null)
+                return null;
+            String type = element.getAsString();
+            Log.e(TAG, "Type : "+type);
             switch (type) {
                 case ViewType.FRAME_LAYOUT:
                     parent.addView(frameLayoutBuilder.create(object));
@@ -142,7 +147,7 @@ public class JsonView {
         }
 
 
-        public Context getContext() {
+        public JsonActivity getContext() {
             return context;
         }
 

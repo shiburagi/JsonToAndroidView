@@ -18,4 +18,5 @@ public class ViewProperties {
     public static final String TEXT_SIZE = "textSize";
     public static final String ON_CLICK = "onClick";
     public static final String SHOW_BACK_BUTTON = "showBackButton";
+    public static final String ID = "id";
 }
