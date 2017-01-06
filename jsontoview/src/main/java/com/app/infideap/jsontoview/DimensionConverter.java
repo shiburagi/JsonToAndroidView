@@ -16,6 +16,7 @@ public class DimensionConverter {
 
     // -- Initialize dimension string to constant lookup.
     public static final Map<String, Integer> dimensionConstantLookup = initDimensionConstantLookup();
+
     private static Map<String, Integer> initDimensionConstantLookup() {
         Map<String, Integer> m = new HashMap<String, Integer>();
         m.put("px", TypedValue.COMPLEX_UNIT_PX);
@@ -27,6 +28,7 @@ public class DimensionConverter {
         m.put("mm", TypedValue.COMPLEX_UNIT_MM);
         return Collections.unmodifiableMap(m);
     }
+
     // -- Initialize pattern for dimension string.
     private static final Pattern DIMENSION_PATTERN = Pattern.compile("^\\-?\\s*(\\d+(\\.\\d+)*)\\s*([a-zA-Z]+)\\s*");
 
@@ -35,7 +37,7 @@ public class DimensionConverter {
         InternalDimension internalDimension = stringToInternalDimension(dimension);
         final float value = internalDimension.value;
         final float f = TypedValue.applyDimension(internalDimension.unit, value, metrics);
-        final int res = (int)(f+0.5f);
+        final int res = (int) (f + 0.5f);
         if (res != 0) return res;
         if (value == 0) return 0;
         if (value > 0) return 1;
@@ -44,8 +46,12 @@ public class DimensionConverter {
 
     public static float stringToDimension(String dimension, DisplayMetrics metrics) {
         // -- Mimics TypedValue.complexToDimension(int data, DisplayMetrics metrics).
-        InternalDimension internalDimension = stringToInternalDimension(dimension);
-        return TypedValue.applyDimension(internalDimension.unit, internalDimension.value, metrics);
+        try {
+            InternalDimension internalDimension = stringToInternalDimension(dimension);
+            return TypedValue.applyDimension(internalDimension.unit, internalDimension.value, metrics);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     private static InternalDimension stringToInternalDimension(String dimension) {

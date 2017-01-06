@@ -9,6 +9,7 @@ import com.app.infideap.httprequest.FutureCallback;
 import com.app.infideap.jsontoview.builder.ButtonLayoutBuilder;
 import com.app.infideap.jsontoview.builder.EditTextLayoutBuilder;
 import com.app.infideap.jsontoview.builder.FrameLayoutBuilder;
+import com.app.infideap.jsontoview.builder.ImageViewLayoutBuilder;
 import com.app.infideap.jsontoview.builder.LinearLayoutBuilder;
 import com.app.infideap.jsontoview.builder.RelativeLayoutBuilder;
 import com.app.infideap.jsontoview.builder.TextViewLayoutBuilder;
@@ -80,6 +81,7 @@ public class JsonView {
         private final TextViewLayoutBuilder textViewLayoutBuilder;
         private final EditTextLayoutBuilder editTextLayoutBuilder;
         private final ButtonLayoutBuilder butonLayoutBuilder;
+        private final ImageViewLayoutBuilder imageViewLayoutBuilder;
         private final JsonActivity context;
 
         public ViewGroupParser(JsonActivity context) {
@@ -90,28 +92,40 @@ public class JsonView {
             editTextLayoutBuilder = new EditTextLayoutBuilder(this);
             butonLayoutBuilder = new ButtonLayoutBuilder(this);
             textViewLayoutBuilder = new TextViewLayoutBuilder(this);
+            imageViewLayoutBuilder = new ImageViewLayoutBuilder(this);
         }
 
 
         public void parse(JsonActivity jsonActivity, FrameLayout parent, JsonElement element) {
             if (element.isJsonObject()) {
                 JsonObject object = element.getAsJsonObject();
-                JsonElement jsonElement = object.get(ViewProperties.SHOW_BACK_BUTTON);
-                if (jsonElement != null)
-                    if (!jsonElement.isJsonNull()) {
-                        jsonActivity.getSupportActionBar()
-                                .setDisplayHomeAsUpEnabled(jsonElement.getAsBoolean());
-                    }
-                parse(parent, object);
-                Log.e(TAG, "Activity View : "+jsonActivity.findViewById(1));
+
+                parseHeader(jsonActivity, object.get(Constant.HEADERS));
+
+
+                parse(parent, object.get(Constant.CONTENT));
             }
 
         }
 
+        private void parseHeader(JsonActivity jsonActivity, JsonElement element) {
+            if (element != null)
+                if (element.isJsonObject()) {
+                    JsonObject object = element.getAsJsonObject();
+                    JsonElement jsonElement = object.get(ViewProperties.SHOW_BACK_BUTTON);
+                    if (jsonElement != null)
+                        if (!jsonElement.isJsonNull()) {
+                            jsonActivity.getSupportActionBar()
+                                    .setDisplayHomeAsUpEnabled(jsonElement.getAsBoolean());
+                        }
+                }
+        }
+
         public void parse(ViewGroup parent, JsonElement result) {
-            if (result.isJsonObject()) {
-                parse(parent, result.getAsJsonObject());
-            }
+            if (result != null)
+                if (result.isJsonObject()) {
+                    parse(parent, result.getAsJsonObject());
+                }
 //            else {
 //                return parse(parent, result.getAsJsonObject());
 //            }
@@ -122,7 +136,7 @@ public class JsonView {
             if (element == null)
                 return null;
             String type = element.getAsString();
-            Log.e(TAG, "Type : "+type);
+            Log.e(TAG, "Type : " + type);
             switch (type) {
                 case ViewType.FRAME_LAYOUT:
                     parent.addView(frameLayoutBuilder.create(object));
@@ -141,6 +155,12 @@ public class JsonView {
                     break;
                 case ViewType.BUTTON:
                     parent.addView(butonLayoutBuilder.create(object));
+                    break;
+                case ViewType.IMAGE_VIEW:
+                    parent.addView(imageViewLayoutBuilder.create(object));
+                    break;
+                case ViewType.SPINNER:
+                    parent.addView(imageViewLayoutBuilder.create(object));
                     break;
             }
             return null;

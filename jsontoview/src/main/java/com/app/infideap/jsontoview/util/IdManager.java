@@ -4,6 +4,8 @@ import android.os.Build;
 import android.view.View;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Shiburagi on 02/01/2017.
@@ -35,5 +37,9 @@ public class IdManager {
 
     public int getId(String id) {
         return map.get(id);
+    }
+
+    public Set<Map.Entry<String,Integer>> getAllIds() {
+        return map.entrySet();
     }
 }

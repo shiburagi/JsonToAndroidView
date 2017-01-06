@@ -6,4 +6,6 @@ package com.app.infideap.jsontoview.builder;
 public class ViewAction {
     public static final String ACTION = "action";
     public static final String PARAMS = "params";
+    public static final String RULES = "rules";
+    public static final String FAILED = "failed";
 }

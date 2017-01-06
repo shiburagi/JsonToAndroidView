@@ -9,8 +9,7 @@
         android:name=".BaseApplication"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data android:name="json_url" android:value="firstPage" />
-
+        <meta-data android:name="LAUNCH_PAGE" android:value="firstPage" />
     </application>
 
 </manifest>

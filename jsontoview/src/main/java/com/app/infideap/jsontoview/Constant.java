@@ -17,4 +17,6 @@ public class Constant {
 
     public static final String CENTER_VERTICAL = "center_vertical";
     public static final String CENTER_HORIZONTAL = "center_horizontal";
+    public static final String CONTENT = "content";
+    public static final String HEADERS = "headers";
 }

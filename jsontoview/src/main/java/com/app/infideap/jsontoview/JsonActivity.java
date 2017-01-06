@@ -27,7 +27,7 @@ public class JsonActivity extends AppCompatActivity {
             try {
                 ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
                 Bundle bundle = ai.metaData;
-                url = bundle.getString("json_url");
+                url = bundle.getString(Constant.LAUNCH_PAGE);
                 Log.e(TAG, "Name " + url);
             } catch (PackageManager.NameNotFoundException e) {
                 Log.e(TAG, "Failed to load meta-data, NameNotFound: " + e.getMessage());

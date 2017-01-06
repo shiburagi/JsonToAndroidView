@@ -19,4 +19,8 @@ public class ViewProperties {
     public static final String ON_CLICK = "onClick";
     public static final String SHOW_BACK_BUTTON = "showBackButton";
     public static final String ID = "id";
+    public static final String PADDING_LEFT = "paddingLeft";
+    public static final String PADDING_RIGHT = "paddingRight";
+    public static final String PADDING_TOP = "paddingTop";
+    public static final String PADDING_BOTTOM = "paddingBottom";
 }

@@ -10,4 +10,6 @@ public class ViewType {
     public static final String EDITTEXT = "editText";
     public static final String BUTTON = "button";
     public static final String TEXTVIEW = "textView";
+    public static final String IMAGE_VIEW = "imageView";
+    public static final String SPINNER = "spinner";
 }
